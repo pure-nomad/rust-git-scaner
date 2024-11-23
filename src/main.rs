@@ -54,17 +54,14 @@ async fn main() -> Result<()> {
     let (sender, mut receiver) = unbounded_channel();
 
     let scanner = task::spawn(async move {
-        println!("start scan");
         let res = util::gen_ua().await.expect("error getting result from ua gen");
         println!("RAN FUNCTION? {}",res);
         scan::git_scan(url_vec,args.threads,sender).await.expect("error scanning");
-        println!("end scan");
     });
 
     let result_handler = tokio::spawn(util::handle_result(receiver));
 
     let _ = tokio::join!(scanner, result_handler);
-    println!("all good");
 
     Ok(())
 
