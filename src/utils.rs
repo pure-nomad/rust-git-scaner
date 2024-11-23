@@ -33,8 +33,8 @@ pub mod utils {
         let mut rng = rand::thread_rng();
         let ua_len: usize = ua_vec.lock().unwrap().len();
         let num: u32 = rng.gen_range(0..ua_len as u32);
-        let final_ua =  ua_vec.lock().unwrap().get(num as usize).expect("Failed to find vec index -> vec value.");
-        
-        Ok(final_ua.to_string())
+
+        // lord please save me wtf is going on
+        Ok(format!("{}",match ua_vec.lock().unwrap().get(num as usize)))
     }
 }

@@ -55,7 +55,7 @@ async fn main() -> Result<()> {
 
     let scanner = task::spawn(async move {
         let res = util::gen_ua().await.expect("error getting result from ua gen");
-        println!("RAN FUNCTION? {}",res);
+        println!("Random User Agent: {}",String::from(res.trim()));
         scan::git_scan(url_vec,args.threads,sender).await.expect("error scanning");
     });
 
