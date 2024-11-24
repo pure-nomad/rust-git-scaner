@@ -5,7 +5,7 @@ pub mod scanner {
         ThreadPoolBuilder
     };
     
-    use reqwest::ClientBuilder;
+    use reqwest::{Client, ClientBuilder, Request, RequestBuilder};
 
     use std::io::Result;
 
@@ -24,7 +24,8 @@ pub mod scanner {
             .connect_timeout(std::time::Duration::from_secs(8))
             .read_timeout(std::time::Duration::from_secs(8))
             .timeout(std::time::Duration::from_secs(8))
-            .build().expect("couldn't build http client");
+            .build()
+            .expect("couldn't build http client");
 
     
         thread_pool.install(|| {
@@ -35,8 +36,12 @@ pub mod scanner {
     
     
             for uri in urls.iter() {
-    
-                let req_client.get(uri);
+                
+                let hostname = reqwest::Url::parse(format!("{}/.git/HEAD",uri).as_str());
+                let request = Request::new(reqwest::Method::GET, hostname.expect("error building request"));
+                req_client.execute(request);
+
+
                 // success functionality (not writing yet)
     
                 /* c+=1;
