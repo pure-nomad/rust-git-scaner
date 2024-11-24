@@ -9,7 +9,7 @@ pub mod scanner {
 
     use std::io::Result;
 
-    pub async fn git_scan(urls: Vec<String>, threads: i32, sender: tokio::sync::mpsc::UnboundedSender<i32>) -> Result<()> {
+    pub async fn git_scan(urls: Vec<String>, threads: i32, sender: tokio::sync::mpsc::UnboundedSender<i32>, ua: String) -> Result<()> {
 
         let thread_pool = ThreadPoolBuilder::new()
             .num_threads((threads + 1) as usize)
@@ -19,20 +19,24 @@ pub mod scanner {
         // optimize the client bro
         let req_client = ClientBuilder::new()
             .danger_accept_invalid_certs(true)
-            .user_agent("User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.3 Brave/1.23.76")
-            .build();
+            .user_agent(ua)
+            .redirect(reqwest::redirect::Policy::limited(3))
+            .connect_timeout(std::time::Duration::from_secs(8))
+            .read_timeout(std::time::Duration::from_secs(8))
+            .timeout(std::time::Duration::from_secs(8))
+            .build().expect("couldn't build http client");
 
     
         thread_pool.install(|| {
     
             let mut _url_count: Vec<i32> = Vec::new();
-            let mut c = 0;
+            let  _c = 0;
 
     
     
-            for _ in urls.iter() {
+            for uri in urls.iter() {
     
-                println!("url in file");
+                let req_client.get(uri);
                 // success functionality (not writing yet)
     
                 /* c+=1;

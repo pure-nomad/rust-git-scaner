@@ -51,12 +51,12 @@ async fn main() -> Result<()> {
         eprintln!("Stop fucking around");
     }
 
-    let (sender, mut receiver) = unbounded_channel();
+    let (sender, receiver) = unbounded_channel();
 
     let scanner = task::spawn(async move {
         let res = util::gen_ua().await.expect("error getting result from ua gen");
-        println!("Random User Agent: {}",String::from(res.trim()));
-        scan::git_scan(url_vec,args.threads,sender).await.expect("error scanning");
+        let user_agent = String::from(res.replace(&['(',')'],"").replace("Some","").trim());
+        scan::git_scan(url_vec,args.threads,sender,user_agent).await.expect("error scanning");
     });
 
     let result_handler = tokio::spawn(util::handle_result(receiver));

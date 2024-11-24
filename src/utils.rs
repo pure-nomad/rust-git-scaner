@@ -21,7 +21,7 @@ pub mod utils {
 
         // remove brackets
         ua_body = ua_body.replace(&['[',']'],"");
-        let mut ua_vec = Arc::new(Mutex::new(Vec::new()));
+        let ua_vec = Arc::new(Mutex::new(Vec::new()));
         ua_body
         .par_lines()
         .into_par_iter()
@@ -33,8 +33,10 @@ pub mod utils {
         let mut rng = rand::thread_rng();
         let ua_len: usize = ua_vec.lock().unwrap().len();
         let num: u32 = rng.gen_range(0..ua_len as u32);
+        let string = format!("{:?}",ua_vec.lock().unwrap().get(num as usize));
+        
+        Ok(string)
 
         // lord please save me wtf is going on
-        Ok(format!("{}",match ua_vec.lock().unwrap().get(num as usize)))
     }
 }
