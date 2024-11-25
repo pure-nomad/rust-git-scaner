@@ -36,12 +36,15 @@ pub mod scanner {
     
     
             for uri in urls.iter() {
+
+                let response = req_client
+                .get(format!("{}/.git/HEAD",uri).as_str())
+                .send()
+                .await
+                .unwrap()
+                .text()
+
                 
-                let hostname = reqwest::Url::parse(format!("{}/.git/HEAD",uri).as_str());
-                let request = Request::new(reqwest::Method::GET, hostname.expect("error building request"));
-                req_client.execute(request);
-
-
                 // success functionality (not writing yet)
     
                 /* c+=1;
